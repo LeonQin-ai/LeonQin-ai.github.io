@@ -4,6 +4,7 @@
 
 - 网站：**https://leonqin-ai.github.io/**
 - 项目：[Cognitive OS](https://github.com/LeonQin-ai/cognitive-os-agent)
+- [文章目录与项目分享文案](content/README.md)
 - 本仓库只管理博客内容与网站，不包含 Runtime 源码或运行配置。
 
 ## 内容
