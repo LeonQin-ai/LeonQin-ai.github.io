@@ -177,7 +177,7 @@ img { max-width:100%; height:auto; }
 .desktop-toc { position:sticky; top:125px; align-self:start; padding:10px 0 0 20px; border-left:1px solid var(--line); }
 .desktop-toc .eyebrow { font-size:9px; }
 .desktop-toc>p { font-size:12px; font-weight:550; margin:8px 0 13px; }
-.desktop-toc nav { display:flex; flex-direction:column; gap:13px; }
+.desktop-toc nav { display:flex; flex-direction:column; gap:13px; max-height:calc(100dvh - 290px); overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; padding-right:8px; }
 .desktop-toc nav a { font-size:11px; line-height:1.85; color:var(--muted); }
 .desktop-toc nav a:hover,.desktop-toc nav a.is-current { color:var(--accent); }
 .desktop-toc .toc-level-3 { padding-left:10px; font-size:10px; }

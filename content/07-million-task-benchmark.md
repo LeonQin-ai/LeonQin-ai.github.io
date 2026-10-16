@@ -47,6 +47,113 @@ python tests/run_runtime_measurements.py --million \
 
 本篇引用的是已保存的历史测量，不代表每次 CI 都重新执行百万任务，也不代表后续每个版本都已经重新建立同样的性能基线。
 
+## 先拆开 benchmark runner，避免测到空循环
+
+`bench_runtime.c` 中的 runner 不请求远程模型，但也不是只递增一个计数器。它记录从提交到 runner 开始的时间，按角色名调用 `agent_pool_task_prompt()` 组织任务输入，对共享上下文做 64 次探测，再设置任务状态和输出。
+
+核心路径可以简化为：
+
+```text
+submitted_us → 进入 Scheduler → runner 开始
+    → 记录 latency_us
+    → 按 bench-N 找角色并构建 prompt
+    → 64 次 context 字节访问与校验
+    → 设置 DONE / FAILED、生成 output
+    → Scheduler 完成与历史裁剪
+```
+
+这意味着数据包含实际队列、工作线程、角色提示组织和完成处理的成本。它仍然是很轻的本地工作，不包含生产模型的 token 生成、真实文档解析或慢速网络工具。理解这条路径后，读者才能判断自己的工作负载与它有多远。
+
+还要看提交端是否主动控制压力。如果提交方节奏较慢，系统可能持续排空队列，此时累计百万项并未制造百万项积压。独立 backlog gate 才是刻意压住 worker、让队列真实增长的实验；两个场景回答的问题不同。
+
+## 吞吐、排队延迟和端到端时间是三种指标
+
+吞吐用完成任务数除以总耗时，适合观察单位时间处理量。排队延迟从提交到 runner 开始，反映任务启动前的等待。端到端任务延迟还包括 runner 工作、工具、模型、完成处理及可能的重试。
+
+```text
+T_end_to_end = T_queue + T_execution + T_finalization
+T_execution ≈ T_model + T_tools + T_local_control
+```
+
+这里的分解是分析模型，不表示当前所有字段都逐项测量了上述每部分。尤其 `scheduler_latency_p99_ms` 不能被改写为“真实 Agent 请求 P99”。把排队分位数误当端到端指标，会大幅低估远程模型应用的等待。
+
+如果某业务平均每项任务需要 2 秒模型时间，仅凭本地 runner 的每秒一万多项完成量，不能估算该业务可承载多少并发。还要加入 API 并发上限、token 配额、工具延迟以及请求间依赖。
+
+## 用原始 JSON 复算，而不是复制截图
+
+下面的脚本在项目根目录运行，读取仓库保存的百万任务数据，检查数量守恒，再按角色规模打印中位耗时、吞吐、运行内 P99 的中位值与最大峰值 RSS：
+
+```python
+import json
+from pathlib import Path
+from statistics import median
+
+path = Path("backend/docs/runtime-million-2026-10-14.json")
+report = json.loads(path.read_text(encoding="utf-8"))
+for agents in (100, 1000):
+    runs = [r for r in report["runs"] if r["agents"] == agents]
+    assert len(runs) == 3
+    for r in runs:
+        assert r["tasks_submitted"] == r["tasks_admitted"] == r["tasks_completed"]
+        assert r["tasks_failed"] == r["tasks_rejected"] == 0
+        assert r["queue_at_end"] == r["active_at_end"] == 0
+        assert r["retained_tasks"] <= 64
+    print({
+        "agents": agents,
+        "elapsed_ms_median": round(median(r["elapsed_ms"] for r in runs), 3),
+        "tasks_s_median": round(median(r["tasks_per_second"] for r in runs)),
+        "queue_p99_ms_median": median(r["scheduler_latency_p99_ms"] for r in runs),
+        "peak_rss_mib_max": round(max(r["peak_rss_bytes"] for r in runs) / 2**20, 2),
+    })
+```
+
+聚合规则需要说清：三次运行的 P99 取中位数，不等于把三百万条原始延迟样本合并后重新计算 P99。前者反映三次实验各自尾部的典型值，后者需要完整样本或可合并直方图。报告采用前者，文章不能悄悄把它改称全体任务的 P99。
+
+同理，峰值 RSS 取组内最大值，不能与耗时的中位值拼成一次实际存在的“最佳运行”。表格每列可能采用不同聚合策略，应保持标注一致。
+
+## 尾延迟上升说明什么，又没有说明什么
+
+1000 角色时，百万任务排队 P99 达到 14.790 ms，而十万任务的对应值为 0.376 ms。这说明该环境和负载下，较长测试存在更明显的排队尾部。它没有直接证明是哪一个锁、分配器或操作系统调度事件造成了退化。
+
+要定位原因，下一步应对照提交采样、活跃数、队列长度与 RSS 时间线，再做单变量实验：固定任务总数，改变 worker 数；固定 worker 数，改变提交压力；固定上下文访问方式，改变角色数。没有这些对照，仅凭“角色变多了”就归因注册表查找，是证据不足的。
+
+三次重复也不足以建立稳定的生产 SLO。机器温度、电源模式、后台程序和运行顺序都可能影响结果。当前数据适合暴露规模行为并形成后续假设，不能替代长期线上分布。
+
+## 为什么内存必须分账
+
+峰值 RSS 包括 Runtime 组件、上下文缓冲、任务对象、线程栈、分配器以及 benchmark 自己保存的验证数据。百万任务负载中的 work 结构和延迟记录数组也随着任务数增长，即使调度器完成历史始终只留 64 条，进程峰值仍可能升高。
+
+因此判断历史泄漏，至少要同时看 retained_tasks、retained_bytes、结束活跃数与队列数，而不能只看一次最高 RSS。更强的长期检验可以在同一进程重复等量批次，观察排空后的内存是否持续阶梯增长；本篇没有用现有表格宣称完成了所有长期泄漏验证。
+
+| 内存口径 | 包含什么 | 适合回答的问题 |
+| --- | --- | --- |
+| Context materialized bytes | 当前物化表示 | 工作集是否按预期驱逐 |
+| retained task bytes | 保留的任务数据 | 完成历史是否有界 |
+| 规范内容大小 | 保留下来的完整记录 | 恢复的数据量是多少 |
+| RSS / Peak RSS | 整个进程驻留及其峰值 | 测试实际占用多少系统内存 |
+
+在大 Context 实验里，1 GiB 规范内容对应约 3.12 GiB 峰值 RSS，进一步说明规范原文、复制、缓存和序列化会叠加。只给出 3900 字节 WARM 概览，容易隐藏主要成本。
+
+## 正确性 gate 为什么先于跑分
+
+负载程序必须先证明完成的是提交的那些任务，而不是漏做工作后获得高吞吐。报告检查 submitted、admitted、completed 相等，failed、rejected 为零，结束 active 与 queued 为零，并验证回滚结果。
+
+这些检查仍不是万能的性能正确性证明。若 runner 中真正的业务计算被错误删掉，数量守恒也可能继续通过。因此文章同时公开 runner 路径、上下文探测数和原始数据，让读者知道“完成一次”具体包含什么。
+
+小规模 smoke 不设置某个固定 tasks/s 阈值，避免共享 CI 机器的抖动被当作功能失败；它检查实际工作、状态和恢复。性能回归可以另设固定机器上的多次基线比较，并保留波动范围。
+
+## 面试追问：如何设计下一轮性能实验
+
+**为什么不直接测生产模型？** 应该测，但它回答另一类问题。远程限流和生成时间可能淹没 Runtime 的局部成本；分层测量更容易定位，最后再组合成端到端评估。
+
+**吞吐下降约 20% 是否证明实现有 bug？** 不能直接证明。它是值得调查的现象，需要控制其他变量并采样热点；正确性与性能退化要分别确认。
+
+**百万任务完成，是否就能接纳百万并发用户？** 不能。累计任务、同时活跃任务、线程、角色和用户会话是不同维度。生产容量还受内存、模型额度、工具连接数和用户等待目标限制。
+
+**重新测一遍，怎样让结果可比较？** 记录提交、编译器与参数、机器与系统、工作负载、worker 数、重复次数、采样方法和聚合规则；对比时先确认这些条件，再比较数字。
+
+源码阅读基线：[runner 与测量字段](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/tests/bench_runtime.c)、[测量组合与断言](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/tests/run_runtime_measurements.py)。
+
 ## 这些测试对项目有什么帮助
 
 它们把“Agent 很多时会不会出问题”拆成可测的问题：注册表查找是否退化？排队延迟如何变化？历史保留是否有界？结束时任务数量是否守恒？积压放行之后能否排空？

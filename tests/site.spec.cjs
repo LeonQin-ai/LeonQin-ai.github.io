@@ -26,6 +26,7 @@ test('homepage, series links, filtering, search and theme',async({page})=>{
 });
 
 test('all eight articles have content, valid navigation and rendered diagrams',async({page})=>{
+  await page.setViewportSize({width:1440,height:768});
   await page.goto('/');
   const links=await page.locator('.card-title').evaluateAll(items=>items.map(item=>item.getAttribute('href')));
   for(const link of links){
@@ -34,6 +35,13 @@ test('all eight articles have content, valid navigation and rendered diagrams',a
     await expect(page.locator('.desktop-toc nav a')).not.toHaveCount(0);
     await expect(page.locator('.post-navigation a')).toHaveCount(2);
     expect(await page.locator('h1').textContent()).toBeTruthy();
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+    const toc=page.locator('.desktop-toc nav');
+    await page.locator('.prose h2').nth(2).scrollIntoViewIfNeeded();
+    await toc.locator('a').last().scrollIntoViewIfNeeded();
+    const box=await toc.boundingBox();
+    expect(box.y).toBeGreaterThanOrEqual(0);
+    expect(box.y+box.height).toBeLessThanOrEqual(768);
   }
   await page.goto('/articles/agent-runtime-in-c/');
   await expect(page.locator('.article-diagram img')).toBeVisible();
@@ -60,7 +68,14 @@ test('mobile: no page overflow and working reading/navigation controls',async({p
   expect(page.url()).toContain('#h-');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await page.goto('/articles/million-task-benchmark/');
-  await expect(page.locator('.table-scroll')).toBeVisible();
+  await expect(page.locator('.table-scroll').first()).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await page.screenshot({path:'test-results/article-mobile.png',fullPage:true});
+  const posts=require('../content/posts.json');
+  for(const post of posts){
+    await page.goto('/articles/'+post.slug+'/');
+    await expect(page.locator('article.prose')).toBeVisible();
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+    await expect(page.locator('.mobile-toc nav a').last()).toHaveAttribute('href',/^#h-/);
+  }
 });

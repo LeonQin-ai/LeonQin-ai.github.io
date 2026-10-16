@@ -1,6 +1,8 @@
 """Check generated documents, internal URLs, feeds and article completeness."""
 from html.parser import HTMLParser
+import ast
 import json
+from markdown_it import MarkdownIt
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from xml.etree import ElementTree as ET
@@ -53,3 +55,16 @@ assert len(sitemap.findall('{*}url'))==len(posts)+1
 assert (SITE/'assets/og-cover.png').is_file()
 assert (SITE/'.nojekyll').is_file()
 print(f'PASS: {len(docs)} HTML documents, {checked} internal links/anchors, 8 complete articles, SEO, RSS and sitemap')
+
+examples=0
+for post in posts:
+    source=(ROOT/'content'/post['file']).read_text(encoding='utf-8')
+    for token in MarkdownIt().parse(source):
+        if token.type!='fence':continue
+        if token.info.strip()=='python':
+            ast.parse(token.content,filename=post['file'])
+            examples+=1
+        elif token.info.strip()=='json':
+            json.loads(token.content)
+            examples+=1
+print(f'PASS: {examples} Python/JSON article examples parse successfully')
