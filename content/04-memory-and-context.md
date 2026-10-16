@@ -135,15 +135,13 @@ if (tok > mmu->token_budget ||
 
 这里使用的 hash 用于测试内容一致性，不应直接扩展成安全领域的防篡改声明。要抵抗恶意修改，还需要另外的威胁模型与完整性机制。
 
-## 面试追问：与普通 RAG 有什么关系
+## 将召回质量与资源预算一起评估
 
-**向量检索已经选了候选，为什么还需要预算管理？** 相关性回答优先看谁，预算回答最多能加载多少以及以什么粒度加载。一条高相关记录可能很大，不能只按条数限制。
+相关性决定优先读取哪些记录，预算决定能加载多少、使用何种粒度。一条高相关记录可能很大，因此只限制候选条数不足以约束工作集。
 
-**把预算设为 8k，就能保证请求只有 8k token 吗？** 不能。当前 Context 使用估算口径，最终请求还包括系统提示、工具定义、会话历史与附件等内容；真实 Provider token 应另行计量。
+Context 的估算预算也不等于最终请求 token 数。系统提示、工具定义、会话历史与附件都会占用输入，真实 Provider 用量应另行计量。
 
-**为什么驱逐而不直接删除？** 驱逐释放可重建的活动表示，遗忘删除或改变长期知识，两者生命周期不同。把它们混淆会让内存优化意外丢失事实。
-
-**什么指标最能帮助调优？** 先看候选命中、提升与拒绝数量、物化字节、驱逐和重新物化延迟，再结合任务是否真的使用了正确证据。缓存命中率高，仍可能持续命中无用内容。
+调优时应同时查看候选命中、提升与拒绝数量、物化字节、驱逐和重新物化延迟，并检查任务是否实际使用了正确证据。缓存命中率高，也可能只是反复命中无用内容。
 
 源码阅读基线：[MMU 召回、评分、物化与驱逐](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/src/context/mmu.c)、[Service 契约](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/include/memory/service.h)、[Service 默认后端](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/src/memory/service.c)。
 

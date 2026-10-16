@@ -110,7 +110,7 @@ static int task_less(const task *a, const task *b) {
 
 ## C 代码里最值得看的是所有权
 
-在 C 中，一个 JSON 输出、一段模型回答、一个 task 指针，都必须有明确的释放方。面试讲解时，我会用任务查询这个例子：API 如果只拿到一个裸指针，调度器恰好在另一线程裁剪历史，读取输出时就可能发生 use-after-free。
+在 C 中，一个 JSON 输出、一段模型回答、一个 task 指针，都必须有明确的释放方。以任务查询为例：API 如果只拿到一个裸指针，调度器恰好在另一线程裁剪历史，读取输出时就可能发生 use-after-free。
 
 项目提供 `scheduler_acquire()` / `scheduler_release()` 这样的持有接口，配合历史裁剪对 references、borrowed 等条件的检查。应重点阅读“获得引用时是否持锁”“释放引用后是否还使用字段”“回调期间是否允许回收”，而不是只检查正常路径有没有 `free()`。
 
@@ -123,16 +123,6 @@ static int task_less(const task *a, const task *b) {
 | 部分初始化的组件 | 初始化失败怎样逆序清理 | 启动失败后句柄泄漏 |
 
 这也是我选择 C11 后必须承担的成本：这些约束更显式，错误也更直接。工程价值来自把约束落实并验证，不能由“没有垃圾回收”直接推出低延迟或低内存。
-
-## 面试时怎样讲清这套架构
-
-**为什么不把模型的最终回答直接当成任务结果？** 因为它只证明一次模型生成结束，不能证明文件已写入、命令成功或依赖已满足。任务结果还需要实际执行记录和对应产物；现有规则也有边界，后面的可靠性文章会展开。
-
-**如果一个工具阻塞很久，取消能立即生效吗？** 取消是协作式的。调度器记录标记，推理和工具需要在各自边界检查；底层同步调用的超时同样重要。不能把一个布尔标记描述为可以强制打断所有外部调用。
-
-**如果角色有一千个，需要一千条工作线程吗？** 不需要。角色是身份和提示词配置，任务是待执行工作，worker 是实际执行资源。三者数量分离，才能控制资源；百万任务测试也必须按这个定义解释。
-
-**下一步优先优化什么？** 先测端到端时间的组成，再决定是减少模型轮数、限制无效重复读取、改进工具等待，还是优化队列。对于远程模型占主导的任务，单纯减少几次堆比较未必改善用户等待时间。
 
 源码阅读基线：[装配入口](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/src/cognitive_os_agent.c)、[队列、worker 与回收](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/src/runtime/scheduler.c)、[任务结构](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/include/runtime/task.h)。这些链接固定到本文核对的提交，后续实现可能继续变化。
 

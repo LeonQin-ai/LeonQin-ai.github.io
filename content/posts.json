@@ -1,10 +1,106 @@
 [
-  {"file":"01-agent-runtime-in-c.md","slug":"agent-runtime-in-c","title":"我为什么用 C11 写一个 Agent Runtime","category":"架构与源码","summary":"沿请求调用链拆解二叉堆、协程懒分配、任务引用与回收，解释 C11 Runtime 的设计取舍。","tags":["C11","Runtime","架构"],"date":"2026-10-16"},
-  {"file":"02-agent-group-discussion.md","slug":"agent-group-discussion","title":"让多个 Agent 真正讨论起来","category":"多 Agent 协作","summary":"从上下文传播到迟到回复校验，分析顺序发言、轮次成本、收敛条件与可重复的交互测试。","tags":["Agent","群聊","并发"],"date":"2026-10-16"},
-  {"file":"03-flow-dependencies.md","slug":"flow-dependencies","title":"多 Agent 的先后顺序，交给 DAG","category":"多 Agent 协作","summary":"拆解 Kahn 分层、隐式结果依赖、失败阻断与层屏障，讨论共享副作用和动态调度的代价。","tags":["DAG","Flow","调度"],"date":"2026-10-16"},
-  {"file":"04-memory-and-context.md","slug":"memory-and-context","title":"记忆与上下文分开管理","category":"记忆与上下文","summary":"深入 MMU 评分、分级物化、缓存失效与预算拒绝分支，用长度和 hash 核对规范内容恢复。","tags":["Memory","Context","MMU"],"date":"2026-10-16"},
-  {"file":"05-tool-protocol-and-evidence.md","slug":"tool-protocol-and-evidence","title":"模型说要调用工具，Runtime 如何接住","category":"架构与源码","summary":"复盘 90 个动作却没生成 PPT 的真实故障，解释 DSML 解析、UTF-8 字节分页与附件诊断。","tags":["DSML","工具调用","多模态"],"date":"2026-10-16"},
-  {"file":"06-reliability-and-recovery.md","slug":"reliability-and-recovery","title":"从“回答完成”到“任务完成”","category":"可靠性与实测","summary":"建立完成证据契约，拆开取消、超时、中断恢复与幂等，说明状态误判的原因和验证方法。","tags":["可靠性","事务","恢复"],"date":"2026-10-16"},
-  {"file":"07-million-task-benchmark.md","slug":"million-task-benchmark","title":"我测了百万任务，但没有测百万次模型推理","category":"可靠性与实测","summary":"逐层拆解 benchmark runner，用 Python 复算原始数据，解释 P99 聚合、吞吐退化和 RSS 分账。","tags":["Benchmark","性能","数据"],"date":"2026-10-16"},
-  {"file":"08-getting-started-and-contributing.md","slug":"getting-started-and-contributing","title":"用实验读懂 Cognitive OS，并准备一次技术面试","category":"架构与源码","summary":"提供文件验收脚本、角色讨论评价表、DAG 故障实验与 15 分钟面试路线，连接源码、运行和追问。","tags":["上手","实践","开源"],"date":"2026-10-16"}
+  {
+    "file": "01-agent-runtime-in-c.md",
+    "slug": "agent-runtime-in-c",
+    "title": "我为什么用 C11 写一个 Agent Runtime",
+    "category": "架构与源码",
+    "summary": "沿请求调用链拆解二叉堆、协程懒分配、任务引用与回收，解释 C11 Runtime 的设计取舍。",
+    "tags": [
+      "C11",
+      "Runtime",
+      "架构"
+    ],
+    "date": "2026-10-16"
+  },
+  {
+    "file": "02-agent-group-discussion.md",
+    "slug": "agent-group-discussion",
+    "title": "让多个 Agent 真正讨论起来",
+    "category": "多 Agent 协作",
+    "summary": "从上下文传播到迟到回复校验，分析顺序发言、轮次成本、收敛条件与可重复的交互测试。",
+    "tags": [
+      "Agent",
+      "群聊",
+      "并发"
+    ],
+    "date": "2026-10-16"
+  },
+  {
+    "file": "03-flow-dependencies.md",
+    "slug": "flow-dependencies",
+    "title": "多 Agent 的先后顺序，交给 DAG",
+    "category": "多 Agent 协作",
+    "summary": "拆解 Kahn 分层、隐式结果依赖、失败阻断与层屏障，讨论共享副作用和动态调度的代价。",
+    "tags": [
+      "DAG",
+      "Flow",
+      "调度"
+    ],
+    "date": "2026-10-16"
+  },
+  {
+    "file": "04-memory-and-context.md",
+    "slug": "memory-and-context",
+    "title": "记忆与上下文分开管理",
+    "category": "记忆与上下文",
+    "summary": "深入 MMU 评分、分级物化、缓存失效与预算拒绝分支，用长度和 hash 核对规范内容恢复。",
+    "tags": [
+      "Memory",
+      "Context",
+      "MMU"
+    ],
+    "date": "2026-10-16"
+  },
+  {
+    "file": "05-tool-protocol-and-evidence.md",
+    "slug": "tool-protocol-and-evidence",
+    "title": "模型说要调用工具，Runtime 如何接住",
+    "category": "架构与源码",
+    "summary": "复盘 90 个动作却没生成 PPT 的真实故障，解释 DSML 解析、UTF-8 字节分页与附件诊断。",
+    "tags": [
+      "DSML",
+      "工具调用",
+      "多模态"
+    ],
+    "date": "2026-10-16"
+  },
+  {
+    "file": "06-reliability-and-recovery.md",
+    "slug": "reliability-and-recovery",
+    "title": "从“回答完成”到“任务完成”",
+    "category": "可靠性与实测",
+    "summary": "建立完成证据契约，拆开取消、超时、中断恢复与幂等，说明状态误判的原因和验证方法。",
+    "tags": [
+      "可靠性",
+      "事务",
+      "恢复"
+    ],
+    "date": "2026-10-16"
+  },
+  {
+    "file": "07-million-task-benchmark.md",
+    "slug": "million-task-benchmark",
+    "title": "我测了百万任务，但没有测百万次模型推理",
+    "category": "可靠性与实测",
+    "summary": "逐层拆解 benchmark runner，用 Python 复算原始数据，解释 P99 聚合、吞吐退化和 RSS 分账。",
+    "tags": [
+      "Benchmark",
+      "性能",
+      "数据"
+    ],
+    "date": "2026-10-16"
+  },
+  {
+    "file": "08-getting-started-and-contributing.md",
+    "slug": "getting-started-and-contributing",
+    "title": "用实验读懂 Cognitive OS：运行、验证与故障分析",
+    "category": "架构与源码",
+    "summary": "提供文件验收脚本、角色讨论评价表与 DAG 故障实验，从可复现行为理解 Runtime 的实现与边界。",
+    "tags": [
+      "上手",
+      "实践",
+      "开源"
+    ],
+    "date": "2026-10-16"
+  }
 ]
