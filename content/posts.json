@@ -1,0 +1,10 @@
+[
+  {"file":"01-agent-runtime-in-c.md","slug":"agent-runtime-in-c","title":"我为什么用 C11 写一个 Agent Runtime","category":"架构与源码","summary":"从“创建一个文件”出发，拆开模型、调度器、工具与完成校验的职责。","tags":["C11","Runtime","架构"],"date":"2026-10-16"},
+  {"file":"02-agent-group-discussion.md","slug":"agent-group-discussion","title":"让多个 Agent 真正讨论起来","category":"多 Agent 协作","summary":"从逐个回答到三轮互相追问：讨论怎样开始、收敛、停止与接管。","tags":["Agent","群聊","并发"],"date":"2026-10-16"},
+  {"file":"03-flow-dependencies.md","slug":"flow-dependencies","title":"多 Agent 的先后顺序，交给 DAG","category":"多 Agent 协作","summary":"先拿到证据，再执行下一步。把依赖、并行与失败传播落实到调度里。","tags":["DAG","Flow","调度"],"date":"2026-10-16"},
+  {"file":"04-memory-and-context.md","slug":"memory-and-context","title":"记忆与上下文分开管理","category":"记忆与上下文","summary":"长期保留什么，这次加载什么？理解 Memory Service 与 Context MMU 的边界。","tags":["Memory","Context","MMU"],"date":"2026-10-16"},
+  {"file":"05-tool-protocol-and-evidence.md","slug":"tool-protocol-and-evidence","title":"模型说要调用工具，Runtime 如何接住","category":"架构与源码","summary":"DSML 解析、源码分页与附件处理：让工具计划变成可以核对的执行证据。","tags":["DSML","工具调用","多模态"],"date":"2026-10-16"},
+  {"file":"06-reliability-and-recovery.md","slug":"reliability-and-recovery","title":"从“回答完成”到“任务完成”","category":"可靠性与实测","summary":"状态要与事实一致。记录完成判定、取消、事务和真实进程崩溃恢复的取舍。","tags":["可靠性","事务","恢复"],"date":"2026-10-16"},
+  {"file":"07-million-task-benchmark.md","slug":"million-task-benchmark","title":"我测了百万任务，但没有测百万次模型推理","category":"可靠性与实测","summary":"公开工作负载、原始数据、P99 与内存口径，解释数字能证明什么。","tags":["Benchmark","性能","数据"],"date":"2026-10-16"},
+  {"file":"08-getting-started-and-contributing.md","slug":"getting-started-and-contributing","title":"用三个小实验体验 Cognitive OS","category":"架构与源码","summary":"从文件执行、角色讨论到故障边界，把架构概念变成自己能运行的实验。","tags":["上手","实践","开源"],"date":"2026-10-16"}
+]
