@@ -105,7 +105,7 @@ def build_home():
 <p class="eyebrow"><span class="status-dot"></span> AI × SYSTEMS × SOURCE CODE</p>
 <h1>从源码出发，<br>把 Agent 做成<span class="accent-word">系统<span class="accent-dot">。</span></span></h1>
 <p class="hero-description">你好，我是 Leon。这里记录 Cognitive OS 的构建过程：<br class="desktop-break">架构怎么拆、代码怎么写、结果怎么验证。</p>
-<div class="hero-actions"><a class="button button-primary" href="{href(POSTS[0])}">从第一篇读起 {icon('arrow')}</a><a class="text-link" href="{PROJECT}">探索 Cognitive OS {icon('external')}</a></div>
+<div class="hero-actions"><a class="button button-primary" href="{href(POSTS[0])}">从第一篇读起 {icon('arrow')}</a><a class="button button-secondary" href="{PROJECT}/releases/latest">下载体验 {icon('external')}</a><a class="text-link" href="{PROJECT}/blob/main/GETTING_STARTED.md">完成第一个任务 {icon('arrow')}</a></div>
 <div class="hero-note"><span>08 篇工程笔记</span><span>源码 · 架构 · 实测</span><span>开源，持续记录</span></div>
 </div><div class="hero-visual"><div class="diagram-header"><span><i></i><i></i><i></i></span><span>cognitive-os / runtime</span><span class="diagram-badge">C11</span></div><img src="/assets/runtime-map.svg" width="540" height="395" alt="Cognitive OS 示意：请求进入调度器，由 Agent 联结记忆与上下文，执行工具并核对证据。"><div class="diagram-footer"><span class="status-dot"></span><code>reason → act → verify</code><span>把想法落实到执行。</span></div></div></section>
 <section class="series-strip page-width" aria-label="系列介绍"><span class="series-label">正在连载</span><div><h2>Cognitive OS：一个 Agent Runtime 的工程实践</h2><p>从系统边界到百万任务，一起走过设计、实现与验证。</p></div><a href="#writing" aria-label="查看全部八篇文章">8 篇完整文章 {icon('arrow')}</a></section>
