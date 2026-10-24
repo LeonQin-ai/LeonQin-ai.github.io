@@ -15,7 +15,7 @@
   {
     "file": "02-agent-group-discussion.md",
     "slug": "agent-group-discussion",
-    "title": "让多个 Agent 真正讨论起来",
+    "title": "让多个 Agent 真正讨论起来：从逐个回答到有界多轮协作",
     "category": "多 Agent 协作",
     "summary": "从上下文传播到迟到回复校验，分析顺序发言、轮次成本、收敛条件与可重复的交互测试。",
     "tags": [
@@ -28,7 +28,7 @@
   {
     "file": "03-flow-dependencies.md",
     "slug": "flow-dependencies",
-    "title": "多 Agent 的先后顺序，交给 DAG",
+    "title": "多 Agent 的先后顺序，交给 DAG：先拿到证据，再执行下一步",
     "category": "多 Agent 协作",
     "summary": "拆解 Kahn 分层、隐式结果依赖、失败阻断与层屏障，讨论共享副作用和动态调度的代价。",
     "tags": [
@@ -41,7 +41,7 @@
   {
     "file": "04-memory-and-context.md",
     "slug": "memory-and-context",
-    "title": "记忆与上下文分开管理",
+    "title": "记忆与上下文分开管理：Cognitive OS 的 Memory Service 与 Context MMU",
     "category": "记忆与上下文",
     "summary": "深入 MMU 评分、分级物化、缓存失效与预算拒绝分支，用长度和 hash 核对规范内容恢复。",
     "tags": [
@@ -54,7 +54,7 @@
   {
     "file": "05-tool-protocol-and-evidence.md",
     "slug": "tool-protocol-and-evidence",
-    "title": "模型说要调用工具，Runtime 如何接住",
+    "title": "模型说要调用工具，Runtime 如何接住：协议解析、分页阅读与附件处理",
     "category": "架构与源码",
     "summary": "复盘 90 个动作却没生成 PPT 的真实故障，解释 DSML 解析、UTF-8 字节分页与附件诊断。",
     "tags": [
@@ -67,7 +67,7 @@
   {
     "file": "06-reliability-and-recovery.md",
     "slug": "reliability-and-recovery",
-    "title": "从“回答完成”到“任务完成”",
+    "title": "从“回答完成”到“任务完成”：Agent 的状态、证据与故障恢复",
     "category": "可靠性与实测",
     "summary": "建立完成证据契约，拆开取消、超时、中断恢复与幂等，说明状态误判的原因和验证方法。",
     "tags": [
@@ -80,7 +80,7 @@
   {
     "file": "07-million-task-benchmark.md",
     "slug": "million-task-benchmark",
-    "title": "我测了百万任务，但没有测百万次模型推理",
+    "title": "我测了百万任务，但没有测百万次模型推理：Cognitive OS 的 Runtime 实测",
     "category": "可靠性与实测",
     "summary": "逐层拆解 benchmark runner，用 Python 复算原始数据，解释 P99 聚合、吞吐退化和 RSS 分账。",
     "tags": [
