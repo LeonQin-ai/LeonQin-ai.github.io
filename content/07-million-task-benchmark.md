@@ -475,6 +475,5 @@ Provider 端到端实验可以随后补充，但要单独控制模型与 token �
 
 完成本文后，建议选取“怎样复现并检查原始结果？”中的一个分支，用固定输入记录预期行为、实际结果和差异。先验证一个具体不变量，再扩大任务规模；若结果不同，优先核对源码版本、配置与输入证据。
 
-写法参考：[JavaGuide 的 LLM 运行机制文章](https://javaguide.cn/ai/llm-basis/llm-operation-mechanism.html)。本系列借鉴问题驱动的组织方式，内容依据 Cognitive OS 的源码与既有实验展开。
 
 上一篇：[可靠性与恢复](06-reliability-and-recovery.md)；下一篇：[三个上手实验](08-getting-started-and-contributing.md)。欢迎提交带机器、编译参数和原始结果的复测，让不同平台的数据能在相同口径下讨论。

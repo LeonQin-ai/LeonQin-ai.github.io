@@ -364,6 +364,5 @@ Cognitive OS 最吸引我的部分，是把 Agent 问题拆成可验证的系统
 
 完成本文后，建议选取“任务如何排队，协程如何运行？”中的一个分支，用固定输入记录预期行为、实际结果和差异。先验证一个具体不变量，再扩大任务规模；若结果不同，优先核对源码版本、配置与输入证据。
 
-写法参考：[JavaGuide 的 LLM 运行机制文章](https://javaguide.cn/ai/llm-basis/llm-operation-mechanism.html)。本系列借鉴问题驱动的组织方式，内容依据 Cognitive OS 的源码与既有实验展开。
 
 下一篇：[让多个 Agent 真正讨论起来](02-agent-group-discussion.md)。欢迎运行项目、提出可复现的问题，或从一个小模块开始参与。

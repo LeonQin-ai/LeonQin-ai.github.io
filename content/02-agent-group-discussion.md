@@ -393,6 +393,5 @@ UI 可以提供“继续讨论”“总结待确认点”和“把确认方案�
 
 完成本文后，建议选取“轮次、预算与收敛如何共同约束讨论？”中的一个分支，用固定输入记录预期行为、实际结果和差异。先验证一个具体不变量，再扩大任务规模；若结果不同，优先核对源码版本、配置与输入证据。
 
-写法参考：[JavaGuide 的 LLM 运行机制文章](https://javaguide.cn/ai/llm-basis/llm-operation-mechanism.html)。本系列借鉴问题驱动的组织方式，内容依据 Cognitive OS 的源码与既有实验展开。
 
 上一篇：[Agent Runtime](01-agent-runtime-in-c.md)；下一篇：[把执行顺序交给 DAG](03-flow-dependencies.md)。如果你希望构建方案评审、设计讨论或故障分析的角色群，可以从这个实现开始实验。

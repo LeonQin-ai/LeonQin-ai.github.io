@@ -405,6 +405,5 @@ python tests/test_vision_wait_e2e.py
 
 完成本文后，建议选取“动作执行前后需要哪些约束？”中的一个分支，用固定输入记录预期行为、实际结果和差异。先验证一个具体不变量，再扩大任务规模；若结果不同，优先核对源码版本、配置与输入证据。
 
-写法参考：[JavaGuide 的 LLM 运行机制文章](https://javaguide.cn/ai/llm-basis/llm-operation-mechanism.html)。本系列借鉴问题驱动的组织方式，内容依据 Cognitive OS 的源码与既有实验展开。
 
 上一篇：[Memory 与 Context](04-memory-and-context.md)；下一篇：[任务完成与故障恢复](06-reliability-and-recovery.md)。如果你遇到“看起来执行了，实际上没做”的案例，带上计划、工具结果和任务记录，会比单独给一句最终答案更有排查价值。
