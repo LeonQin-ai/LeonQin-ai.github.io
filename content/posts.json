@@ -108,7 +108,7 @@
     "slug": "persistent-agent-platform",
     "title": "一个 Agent 一直记得你，却不必一直运行",
     "category": "Agent 平台",
-    "summary": "从飞书私聊到按需 Worker：看 Agent 如何保留身份、清理中断执行，以及 72 个容器实例怎样完成 17,113 次真实文件操作。",
+    "summary": "从飞书私聊到按需 Worker：看 Agent 如何保留身份、把控制面和执行节点拆开部署，以及单机容量实测。",
     "tags": [
       "Go",
       "Rust",
