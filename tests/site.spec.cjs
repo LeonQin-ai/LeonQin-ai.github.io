@@ -4,7 +4,7 @@ test('homepage, series links, filtering, search and theme',async({page})=>{
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto('/');
   await expect(page).toHaveTitle(/Leon Qin/);
-  await expect(page.locator('[data-post]')).toHaveCount(8);
+  await expect(page.locator('[data-post]')).toHaveCount(require('../content/posts.json').length);
   await page.getByRole('button',{name:'多 Agent 协作',exact:true}).click();
   await expect(page.locator('[data-post]:visible')).toHaveCount(2);
   await page.getByRole('button',{name:/全部文章/}).click();
@@ -15,7 +15,7 @@ test('homepage, series links, filtering, search and theme',async({page})=>{
   await page.getByRole('searchbox').fill('not-an-article-xyz');
   await expect(page.locator('.empty-state')).toBeVisible();
   await page.getByRole('button',{name:'清除筛选'}).click();
-  await expect(page.locator('[data-post]:visible')).toHaveCount(8);
+  await expect(page.locator('[data-post]:visible')).toHaveCount(require('../content/posts.json').length);
   await page.getByRole('button',{name:'切换深浅主题'}).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme','dark');
   await page.reload();
@@ -25,7 +25,7 @@ test('homepage, series links, filtering, search and theme',async({page})=>{
   expect(errors).toEqual([]);
 });
 
-test('all eight articles have content, valid navigation and rendered diagrams',async({page})=>{
+test('all articles have content, valid navigation and rendered diagrams',async({page})=>{
   await page.setViewportSize({width:1440,height:768});
   await page.goto('/');
   const links=await page.locator('.card-title').evaluateAll(items=>items.map(item=>item.getAttribute('href')));

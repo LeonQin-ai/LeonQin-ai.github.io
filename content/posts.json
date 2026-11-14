@@ -102,5 +102,18 @@
       "开源"
     ],
     "date": "2026-10-16"
+  },
+  {
+    "file": "09-persistent-agent-platform.md",
+    "slug": "persistent-agent-platform",
+    "title": "Agent 关掉执行进程后，怎么接着工作？",
+    "category": "Agent 平台",
+    "summary": "拆解 super-agent-bot-plantform 的持久身份、飞书入口、按需 Worker 与中断恢复。",
+    "tags": [
+      "Go",
+      "Rust",
+      "Agent 平台"
+    ],
+    "date": "2026-11-14"
   }
 ]

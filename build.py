@@ -7,6 +7,7 @@ from html import escape
 import json
 from pathlib import Path
 import re
+import os
 import shutil
 from urllib.parse import urlsplit
 from xml.etree import ElementTree as ET
@@ -21,6 +22,11 @@ PROJECT = "https://github.com/LeonQin-ai/light-agent"
 BRAND = "Leon Qin · 工程笔记"
 DESCRIPTION = "从源码出发，记录 AI 与系统工程。light-agent 的架构、多 Agent 协作、记忆、工具执行与实测。"
 POSTS = json.loads((ROOT / "content/posts.json").read_text(encoding="utf-8"))
+PLATFORM = "https://github.com/LeonQin-ai/super-agent-bot-plantform"
+ANALYTICS = os.environ.get("GOATCOUNTER_ENDPOINT", "").strip()
+if ANALYTICS and not re.fullmatch(r"https://[a-z0-9][a-z0-9-]*\.goatcounter\.com/count", ANALYTICS):
+    raise ValueError("GOATCOUNTER_ENDPOINT must be a hosted GoatCounter count URL")
+
 SLUGS = {post["file"]: post["slug"] for post in POSTS}
 
 
@@ -41,6 +47,7 @@ def icon(name):
 
 def head(title, description, path, schema):
     canonical = SITE + path
+    analytics = f'<script async data-goatcounter="{escape(ANALYTICS, quote=True)}" src="https://gc.zgo.at/count.js"></script>' if ANALYTICS and path != "/404.html" else ""
     return f'''<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{escape(title)}</title><meta name="description" content="{escape(description, quote=True)}">
@@ -54,7 +61,7 @@ def head(title, description, path, schema):
 <script>try{{const t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.dataset.theme='dark';}}catch(e){{}}</script>
 <link rel="stylesheet" href="/assets/site.css"><script src="/assets/site.js" defer></script>
 <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False).replace('</', '<\\/')}</script>
-</head><body><a class="skip-link" href="#main">跳到正文</a>'''
+{analytics}</head><body><a class="skip-link" href="#main">跳到正文</a>'''
 
 
 def header(article=False):
@@ -97,7 +104,7 @@ def card(post):
 
 def build_home():
     categories = list(dict.fromkeys(post['category'] for post in POSTS))
-    filters = '<button class="filter is-active" data-filter="全部" aria-pressed="true">全部文章 <span>08</span></button>'
+    filters = f'<button class="filter is-active" data-filter="全部" aria-pressed="true">全部文章 <span>{len(POSTS):02}</span></button>'
     filters += ''.join(f'<button class="filter" data-filter="{category}" aria-pressed="false">{category}</button>' for category in categories)
     schema = {"@context":"https://schema.org", "@type":"Blog", "name":BRAND, "url":SITE + "/", "description":DESCRIPTION, "author":{"@type":"Person","name":"Leon Qin","url":"https://github.com/LeonQin-ai"}}
     html = head(BRAND + "｜AI 与系统工程", DESCRIPTION, "/", schema) + header()
@@ -106,10 +113,10 @@ def build_home():
 <h1>从源码出发，<br>把 Agent 做成<span class="accent-word">系统<span class="accent-dot">。</span></span></h1>
 <p class="hero-description">你好，我是 Leon。这里记录 light-agent 的构建过程：<br class="desktop-break">架构怎么拆、代码怎么写、结果怎么验证。</p>
 <div class="hero-actions"><a class="button button-primary" href="{href(POSTS[0])}">从第一篇读起 {icon('arrow')}</a><a class="button button-secondary" href="{PROJECT}/releases/latest">下载体验 {icon('external')}</a><a class="text-link" href="{PROJECT}/blob/main/GETTING_STARTED.md">完成第一个任务 {icon('arrow')}</a></div>
-<div class="hero-note"><span>08 篇工程笔记</span><span>源码 · 架构 · 实测</span><span>开源，持续记录</span></div>
+<div class="hero-note"><span>{len(POSTS):02} 篇工程笔记</span><span>源码 · 架构 · 实测</span><span>开源，持续记录</span></div>
 </div><div class="hero-visual"><div class="diagram-header"><span><i></i><i></i><i></i></span><span>light-agent / runtime</span><span class="diagram-badge">C11</span></div><img src="/assets/runtime-map.svg" width="540" height="395" alt="light-agent 示意：请求进入调度器，由 Agent 联结记忆与上下文，执行工具并核对证据。"><div class="diagram-footer"><span class="status-dot"></span><code>reason → act → verify</code><span>把想法落实到执行。</span></div></div></section>
-<section class="series-strip page-width" aria-label="系列介绍"><span class="series-label">正在连载</span><div><h2>light-agent：一个 Agent Runtime 的工程实践</h2><p>从系统边界到百万任务，一起走过设计、实现与验证。</p></div><a href="#writing" aria-label="查看全部八篇文章">8 篇完整文章 {icon('arrow')}</a></section>
-<section class="writing page-width" id="writing" aria-labelledby="writing-title"><div class="section-heading"><div><p class="eyebrow">THE ENGINEERING JOURNAL</p><h2 id="writing-title">工程笔记<span class="heading-dot"> / </span><span class="heading-count">08</span></h2></div><label class="search-box">{icon('search')}<input type="search" id="article-search" placeholder="搜索标题、主题…" aria-label="搜索文章" autocomplete="off"><kbd>/</kbd></label></div>
+<section class="series-strip page-width" aria-label="系列介绍"><span class="series-label">正在连载</span><div><h2>light-agent：一个 Agent Runtime 的工程实践</h2><p>从系统边界到百万任务，一起走过设计、实现与验证。另见 <a href="{href(POSTS[-1])}">Agent 平台项目笔记</a>。</p></div><a href="#writing" aria-label="查看全部文章">{len(POSTS)} 篇完整文章 {icon('arrow')}</a></section>
+<section class="writing page-width" id="writing" aria-labelledby="writing-title"><div class="section-heading"><div><p class="eyebrow">THE ENGINEERING JOURNAL</p><h2 id="writing-title">工程笔记<span class="heading-dot"> / </span><span class="heading-count">{len(POSTS):02}</span></h2></div><label class="search-box">{icon('search')}<input type="search" id="article-search" placeholder="搜索标题、主题…" aria-label="搜索文章" autocomplete="off"><kbd>/</kbd></label></div>
 <div class="filter-bar" role="group" aria-label="按主题筛选">{filters}</div><p class="search-status" role="status" aria-live="polite"></p><div class="post-grid">{''.join(card(post) for post in POSTS)}</div><div class="empty-state" hidden><span>∅</span><h3>暂时没有找到这篇笔记</h3><p>换一个关键词，或查看全部文章。</p><button class="button button-secondary" id="clear-search">清除筛选</button></div></section>
 <section class="about page-width" id="about" aria-labelledby="about-title"><div class="about-intro"><p class="eyebrow">BEHIND THE NOTES</p><h2 id="about-title">写代码，<br>也把过程写下来。</h2></div><div class="about-copy"><p>我是 Leon Qin，关注 AI 基础设施与系统工程。我在开发 <a href="{PROJECT}">light-agent</a>：一个用 C11 实现的 Agent Runtime，把调度、状态、记忆、上下文与工具执行放回系统中。</p><p>这里分享源码里的设计取舍、真实问题和可复现的实验。测试数字会标明工作负载，完成记录会对应实际证据。希望这些笔记，也能成为你构建系统时的一点参考。</p><div class="about-links"><a class="text-link" href="https://github.com/LeonQin-ai">GitHub 主页 {icon('external')}</a><a class="text-link" href="/feed.xml">用 RSS 订阅 {icon('rss')}</a></div></div></section></main>'''
     write('index.html', html + footer())
@@ -159,14 +166,16 @@ def render_article(post):
     toc_html = ''.join(f'<a class="toc-level-{level}" href="#{escape(anchor, quote=True)}">{escape(label)}</a>' for anchor, label, level in toc)
     schema = {"@context":"https://schema.org", "@type":"BlogPosting", "headline":post['full_title'], "description":post['summary'], "datePublished":post['date'], "author":{"@type":"Person","name":"Leon Qin","url":"https://github.com/LeonQin-ai"}, "mainEntityOfPage":SITE + href(post), "image":SITE+'/assets/og-cover.png', "inLanguage":"zh-CN"}
     html = head(post['title'] + '｜' + BRAND, post['summary'], href(post), schema) + header(True)
-    html += f'''<div class="reading-progress" aria-hidden="true"><span></span></div><main id="main" class="article-page page-width"><div class="article-top"><a class="breadcrumb" href="/#writing">← 全部工程笔记</a><span>light-agent 系列 / {post['number']}</span></div><header class="article-header"><div class="article-eyebrow"><span class="category">{post['category']}</span><span>第 {post['number']} / 08 篇</span></div><h1>{escape(post['full_title'])}</h1><p class="article-deck">{escape(post['summary'])}</p><div class="article-meta"><span class="author-avatar">LQ</span><span>Leon Qin</span><span class="meta-divider">·</span><time datetime="{post['date']}">{post['date'].replace('-', '.')}</time><span class="meta-divider">·</span><span>约 {post['minutes']} 分钟</span></div></header>
-<div class="article-layout"><div class="article-main"><details class="mobile-toc"><summary>文章目录</summary><nav aria-label="移动端文章目录">{toc_html}</nav></details><article class="prose">{body}</article><aside class="project-callout"><span class="callout-symbol">↗</span><div><h2>把阅读变成一次实验。</h2><p>light-agent 的源码、测试和原始数据都在 GitHub，欢迎复现、提问与贡献。</p><a class="text-link" href="{PROJECT}">前往开源项目 {icon('external')}</a></div></aside>'''
+    project = PLATFORM if post["slug"] == "persistent-agent-platform" else PROJECT
+    project_name = "super-agent-bot-plantform" if project == PLATFORM else "light-agent"
+    html += f'''<div class="reading-progress" aria-hidden="true"><span></span></div><main id="main" class="article-page page-width"><div class="article-top"><a class="breadcrumb" href="/#writing">← 全部工程笔记</a><span>{project_name} / {post['number']}</span></div><header class="article-header"><div class="article-eyebrow"><span class="category">{post['category']}</span><span>第 {post['number']} / {len(POSTS):02} 篇</span></div><h1>{escape(post['full_title'])}</h1><p class="article-deck">{escape(post['summary'])}</p><div class="article-meta"><span class="author-avatar">LQ</span><span>Leon Qin</span><span class="meta-divider">·</span><time datetime="{post['date']}">{post['date'].replace('-', '.')}</time><span class="meta-divider">·</span><span>约 {post['minutes']} 分钟</span></div></header>
+<div class="article-layout"><div class="article-main"><details class="mobile-toc"><summary>文章目录</summary><nav aria-label="移动端文章目录">{toc_html}</nav></details><article class="prose">{body}</article><aside class="project-callout"><span class="callout-symbol">↗</span><div><h2>把阅读变成一次实验。</h2><p>{project_name} 的源码与项目文档都在 GitHub，欢迎复现、提问与贡献。</p><a class="text-link" href="{project}">前往开源项目 {icon('external')}</a></div></aside>'''
     index = POSTS.index(post)
     previous = POSTS[index-1] if index else None
     following = POSTS[index+1] if index+1 < len(POSTS) else None
     html += '<nav class="post-navigation" aria-label="上一篇与下一篇">'
     html += f'<a href="{href(previous)}"><span>← 上一篇</span><strong>{escape(previous["title"])}</strong></a>' if previous else '<a href="/#writing"><span>回到起点</span><strong>查看全部工程笔记</strong></a>'
-    html += f'<a href="{href(following)}"><span>下一篇 →</span><strong>{escape(following["title"])}</strong></a>' if following else f'<a href="{PROJECT}"><span>接下来，动手试试 ↗</span><strong>探索 light-agent 源码</strong></a>'
+    html += f'<a href="{href(following)}"><span>下一篇 →</span><strong>{escape(following["title"])}</strong></a>' if following else f'<a href="{project}"><span>接下来，动手试试 ↗</span><strong>探索 {project_name} 源码</strong></a>'
     html += f'''</nav><div class="article-source"><a href="{REPO}/blob/main/content/{post['file']}">在 GitHub 阅读 Markdown 源文</a><a href="{REPO}/issues/new?title=文章反馈：{post['slug']}">反馈与交流 ↗</a></div></div><aside class="desktop-toc"><span class="eyebrow">IN THIS ARTICLE</span><p>本文目录</p><nav aria-label="文章目录">{toc_html}</nav><a class="toc-back" href="/#writing">← 返回系列目录</a></aside></div></main>'''
     write(f'articles/{post["slug"]}/index.html', html + footer())
 

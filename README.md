@@ -9,7 +9,7 @@
 
 ## 内容
 
-8 篇文章保存在 [`content/`](content/)，包括 C11 Runtime、多轮 Agent 讨论、Flow DAG、Memory/Context、工具协议、可靠性、百万任务实测和上手实验。文章引用原项目的源码和原始证据；历史基准不是每次构建重新测量的生产模型性能。
+9 篇文章保存在 [`content/`](content/)，包括 C11 Runtime、多轮 Agent 讨论、Flow DAG、Memory/Context、工具协议、可靠性、百万任务实测和上手实验。文章引用原项目的源码和原始证据；历史基准不是每次构建重新测量的生产模型性能。
 
 正文已扩展为源码深读系列：二叉堆与任务回收、讨论接管时序、Kahn 分层与失败传播、MMU 预算和缓存、真实 DSML 故障复盘、幂等与中断恢复、原始数据复算，以及可运行验收脚本和故障分析。源码解读链接固定到核对的提交 `cca98b6`；当前限制与后续改进方向在正文中分别说明。
 
@@ -51,3 +51,7 @@ npm test
 ```
 
 Windows 如果已有 Edge，可设置环境变量 `PLAYWRIGHT_BROWSER_CHANNEL=msedge`，直接使用本机浏览器。回归覆盖首页、8 个文章链接、主题筛选、搜索/无结果、键盘快捷键、主题持久化、文章目录/代码复制，以及手机布局。截图为测试产物，不随网站源码发布。
+
+项目笔记：[Agent 平台：持久身份与按需执行](content/09-persistent-agent-platform.md)。
+
+访问数据与站点统计配置见 [TRAFFIC.md](TRAFFIC.md)。

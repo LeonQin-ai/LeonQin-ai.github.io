@@ -28,7 +28,7 @@ class Document(HTMLParser):
         if tag=='meta':self.meta[data.get('name',data.get('property'))]=data.get('content','')
 
 docs={path:Document(path.read_text(encoding='utf-8')) for path in SITE.rglob('*.html')}
-assert len(posts)==8 and len(docs)==len(posts)+2,(len(posts),len(docs))
+assert len(docs)==len(posts)+2,(len(posts),len(docs))
 checked=0
 for path,doc in docs.items():
     assert doc.h1==1 and len(doc.canonical)==1,(path,'Missing unique heading/canonical')
@@ -54,7 +54,7 @@ sitemap=ET.parse(SITE/'sitemap.xml')
 assert len(sitemap.findall('{*}url'))==len(posts)+1
 assert (SITE/'assets/og-cover.png').is_file()
 assert (SITE/'.nojekyll').is_file()
-print(f'PASS: {len(docs)} HTML documents, {checked} internal links/anchors, 8 complete articles, SEO, RSS and sitemap')
+print(f'PASS: {len(docs)} HTML documents, {checked} internal links/anchors, {len(posts)} complete articles, SEO, RSS and sitemap')
 
 examples=0
 for post in posts:
