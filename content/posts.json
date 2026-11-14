@@ -106,9 +106,9 @@
   {
     "file": "09-persistent-agent-platform.md",
     "slug": "persistent-agent-platform",
-    "title": "Agent 关掉执行进程后，怎么接着工作？",
+    "title": "一个 Agent 一直记得你，却不必一直运行",
     "category": "Agent 平台",
-    "summary": "拆解 super-agent-bot-plantform 的持久身份、飞书入口、按需 Worker 与中断恢复。",
+    "summary": "从飞书私聊到按需 Worker：看 Agent 如何保留身份、清理中断执行，以及 72 个容器实例怎样完成 17,113 次真实文件操作。",
     "tags": [
       "Go",
       "Rust",

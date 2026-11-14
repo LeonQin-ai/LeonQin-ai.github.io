@@ -1,6 +1,8 @@
-# Agent 关掉执行进程后，怎么接着工作？
+# 一个 Agent 一直记得你，却不必一直运行
 
-我在 [light-agent](https://github.com/LeonQin-ai/light-agent) 之外做了一个上层项目：[super-agent-bot-plantform](https://github.com/LeonQin-ai/super-agent-bot-plantform)。前者负责 Agent 的推理和执行过程；后者关心一个跨进程的问题：用户隔一段时间回来继续对话时，怎样找到原来的 Agent，又不必为每个 Agent 一直保留一个执行进程？
+上午，你在飞书里请 Agent 整理一份资料。下午再问一句「继续刚才那个任务」，你希望它还是上午那个 Agent。可如果每个用户的 Agent 都要常驻一个进程，光是等待消息也会占用机器资源。
+
+**这个项目想做到的是：一直保留 Agent 的身份，只在有活时分配执行资源。** [super-agent-bot-plantform](https://github.com/LeonQin-ai/super-agent-bot-plantform) 用 Go 和 SQLite 保存身份与任务，用 Rust 管理执行 Worker，把推理和工具调用交给 [light-agent](https://github.com/LeonQin-ai/light-agent)。飞书私聊和按需启动 Docker Worker 已在真实 Linux 虚拟机上验证；完整的生产唤醒与休眠调度仍在建设中。上面的对话是设计想解决的场景，不是已完成的连续记忆演示。
 
 ## 持久化的到底是哪一部分？
 
@@ -24,8 +26,23 @@
 
 复核这条路径时，可以在独立测试环境中对照任务记录、Worker 标识和执行输出：正常完成时三者应能对应；中断时重点看是否留下可诊断的任务状态，以及后续请求是否还能进入系统。这里的验收对象是可观察的恢复行为，而不是模型在回答里声称“已经恢复”。
 
+## 一台 4 核机器，能同时跑多少 Agent？
+
+如果只报「启动了多少个容器」，读者仍不知道这些 Agent 真干活时会怎样。于是复测给每个实例独立的容器、状态目录和工作区，让文件工具写入唯一标记，再核对文件内容。
+
+| 4 vCPU、3655 MiB RAM 的 Linux VM | 完成任务 | 错误 | P95 |
+| --- | ---: | ---: | ---: |
+| 72 个文件工具实例，120.5 秒 | 17,113 | 0 | 315 ms |
+| 80 个文件工具实例，120.5 秒 | 18,052 | 1 | 711 ms |
+
+72 个实例达到约 **142 个文件任务/秒**，通过复测门槛。80 个实例虽然完成更多任务，却出现错误，没有达标。这比单报一个最大并发数更能说明问题：增加执行实例后，尾延迟先变差，吞吐没有按实例数同比增长。
+
+数据来自[容量复测报告](https://github.com/LeonQin-ai/super-agent-bot-plantform/blob/acda0b6/docs/agent-capacity-followup-2026-11-07.md)。模型使用内置 Mock，文件操作是真实执行；这一测试衡量独立 Worker 的执行容量，不代表真实模型或飞书端到端吞吐。休眠身份可以存多少，也要单独测量。
+
 ## 已验证的能力与待完成的工作
 
 项目文档记录了真实 Linux 虚拟机上的飞书私聊回复和按需 Docker Worker 验证。独立的唤醒、休眠状态机已有基础，生产驱动仍待接线。Firecracker 有 Jailer、vsock 和 Guest RPC 等基础工作，KVM 启动仍待验证；gVisor 和 WASM 有策略及能力检测框架，执行 Provider 尚未实现。容器容量测试和端到端消息吞吐需要分别读，不能互相代替。
 
 想从源码开始，可以先看[平台架构](https://github.com/LeonQin-ai/super-agent-bot-plantform/blob/acda0b6/docs/architecture.md)，再看[持久执行](https://github.com/LeonQin-ai/super-agent-bot-plantform/blob/acda0b6/docs/durable-execution.md)与[Linux 验证记录](https://github.com/LeonQin-ai/super-agent-bot-plantform/blob/acda0b6/docs/linux-validation-2026-11-06.md)。如果想理解 Worker 里的模型和工具如何协作，可以接着读[用 C11 写 Agent Runtime](01-agent-runtime-in-c.md)。
+
+如果只看三个入口：[项目源码](https://github.com/LeonQin-ai/super-agent-bot-plantform)看架构，[Linux 验证记录](https://github.com/LeonQin-ai/super-agent-bot-plantform/blob/acda0b6/docs/linux-validation-2026-11-06.md)看真实执行与恢复，[容量复测](https://github.com/LeonQin-ai/super-agent-bot-plantform/blob/acda0b6/docs/agent-capacity-followup-2026-11-07.md)看实例增加后系统如何变化。
