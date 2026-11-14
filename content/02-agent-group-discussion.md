@@ -2,7 +2,7 @@
 
 > 把两段角色提示词放在一个群里，未必就形成了讨论。真正的交互需要让先发言的人有机会回答后来提出的问题，也需要明确何时结束、如何停止，以及新消息到来后旧答案该怎么办。
 
-这是 [Cognitive OS](https://github.com/LeonQin-ai/cognitive-os-agent) 技术系列第 2 篇，记录群聊从单轮回复升级到多轮讨论的实现。
+这是 [light-agent](https://github.com/LeonQin-ai/light-agent) 技术系列第 2 篇，记录群聊从单轮回复升级到多轮讨论的实现。
 
 ## 这篇文章要解决什么问题？
 
@@ -264,7 +264,7 @@ IM 存储还有自己的同步边界。消息追加前，存储层需要确认�
 
 独立角色会话保存各自的过程，房间记录负责交换意见。这种隔离需要明确共享范围；最近 128 条消息的窗口也意味着早期论据未必仍在输入中。长讨论需要保留来源和未解决问题，避免摘要掩盖证据缺口。
 
-源码阅读基线：[讨论循环与接管](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/src/cognitive_os_agent.c)、[房间持久化与条件追加](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/src/im/im.c)。
+源码阅读基线：[讨论循环与接管](https://github.com/LeonQin-ai/light-agent/blob/cca98b6/backend/src/cognitive_os_agent.c)、[房间持久化与条件追加](https://github.com/LeonQin-ai/light-agent/blob/cca98b6/backend/src/im/im.c)。
 
 ### 多模型路由与故障的组合
 
@@ -353,7 +353,7 @@ IM 存储还有自己的同步边界。消息追加前，存储层需要确认�
 
 回归用例用本地确定性模型实际检查：beta 的问题是否进入 alpha 第二轮输入；alpha 的回答是否进入 beta 的下一次输入；取消或接管后是否丢弃迟到结果；部分角色失败是否让整体如实失败。它验证交互管道，真实讨论深度仍取决于模型和问题。
 
-源码：[讨论调度](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/src/cognitive_os_agent.c)、[IM 原子入库](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/src/im/im.c)。验证：[HTTP 回归](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/tests/test_im_discussion_e2e.py)。
+源码：[讨论调度](https://github.com/LeonQin-ai/light-agent/blob/main/backend/src/cognitive_os_agent.c)、[IM 原子入库](https://github.com/LeonQin-ai/light-agent/blob/main/backend/src/im/im.c)。验证：[HTTP 回归](https://github.com/LeonQin-ai/light-agent/blob/main/backend/tests/test_im_discussion_e2e.py)。
 
 ## 6. 何时使用群聊，何时转入交付流程？
 

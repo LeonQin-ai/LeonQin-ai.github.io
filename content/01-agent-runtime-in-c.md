@@ -1,8 +1,8 @@
 # 我为什么用 C11 写一个 Agent Runtime
 
-> 当一个 Agent 开始读文件、运行命令和协调其他角色，问题就从“模型怎么回答”扩展为“系统怎么执行”。Cognitive OS 是我沿着这条边界做的一个开源项目：把任务状态、调度、记忆、上下文和执行放进可检查的 Runtime。
+> 当一个 Agent 开始读文件、运行命令和协调其他角色，问题就从“模型怎么回答”扩展为“系统怎么执行”。light-agent 是我沿着这条边界做的一个开源项目：把任务状态、调度、记忆、上下文和执行放进可检查的 Runtime。
 
-项目地址：[cognitive-os-agent](https://github.com/LeonQin-ai/cognitive-os-agent)。本文是源码与实测系列的第 1 篇。
+项目地址：[cognitive-os-agent](https://github.com/LeonQin-ai/light-agent)。本文是源码与实测系列的第 1 篇。
 
 ## 这篇文章要解决什么问题？
 
@@ -46,7 +46,7 @@
 
 这些问题分布在同一条链路上，却不能只靠一段提示词解决。模型可以提出 `file_write` 动作；动作解析、策略检查、实际文件操作和状态记录仍需要确定性的程序负责。
 
-在 Cognitive OS 中，这条链路大致是：
+在 light-agent 中，这条链路大致是：
 
 ```mermaid
 flowchart LR
@@ -234,7 +234,7 @@ ready heap 可以动态扩容，但“内存允许就一直接单”不是完整
 
 这也是我选择 C11 后必须承担的成本：这些约束更显式，错误也更直接。工程价值来自把约束落实并验证，不能由“没有垃圾回收”直接推出低延迟或低内存。
 
-源码阅读基线：[装配入口](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/src/cognitive_os_agent.c)、[队列、worker 与回收](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/src/runtime/scheduler.c)、[任务结构](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/include/runtime/task.h)。这些链接固定到本文核对的提交，后续实现可能继续变化。
+源码阅读基线：[装配入口](https://github.com/LeonQin-ai/light-agent/blob/cca98b6/backend/src/cognitive_os_agent.c)、[队列、worker 与回收](https://github.com/LeonQin-ai/light-agent/blob/cca98b6/backend/src/runtime/scheduler.c)、[任务结构](https://github.com/LeonQin-ai/light-agent/blob/cca98b6/backend/include/runtime/task.h)。这些链接固定到本文核对的提交，后续实现可能继续变化。
 
 ### 把一次任务画成对象关系，而不只画成模块框图
 
@@ -342,7 +342,7 @@ completed task 保存在 Scheduler 的 `all[]` 中一段时间，方便查询和
 
 ### 阅读后的结论
 
-Cognitive OS 的 Runtime 值得从生命周期、所有权和失败路径理解，而不只是从功能列表理解。最有信息量的源码通常不是 happy path，而是协程创建失败、任务被取消、历史裁剪、callback 尚未完成或页面预算拒绝提升这些分支。
+light-agent 的 Runtime 值得从生命周期、所有权和失败路径理解，而不只是从功能列表理解。最有信息量的源码通常不是 happy path，而是协程创建失败、任务被取消、历史裁剪、callback 尚未完成或页面预算拒绝提升这些分支。
 
 这也决定了后续文章的阅读方式：先问一个具体工程问题，再找负责的对象与状态，最后找能失败的反例和回归。项目并没有因此变成完整操作系统，也不保证所有外部副作用可恢复；它提供的是一套可检查的运行时边界，剩余保证必须逐项验证。
 
@@ -356,9 +356,9 @@ Cognitive OS 的 Runtime 值得从生命周期、所有权和失败路径理解�
 
 ### 为什么值得继续看
 
-Cognitive OS 最吸引我的部分，是把 Agent 问题拆成可验证的系统问题：讨论如何停止、依赖何时满足、上下文为什么被淘汰、恢复后能否继续执行。这个项目仍在演进，适合对 Agent 基础设施、C 系统设计和可靠执行感兴趣的开发者一起研究。
+light-agent 最吸引我的部分，是把 Agent 问题拆成可验证的系统问题：讨论如何停止、依赖何时满足、上下文为什么被淘汰、恢复后能否继续执行。这个项目仍在演进，适合对 Agent 基础设施、C 系统设计和可靠执行感兴趣的开发者一起研究。
 
-源码：[Runtime 装配](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/src/cognitive_os_agent.c)、[Scheduler](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/src/runtime/scheduler.c)、[Reasoning](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/src/cognition/reasoning.c)。
+源码：[Runtime 装配](https://github.com/LeonQin-ai/light-agent/blob/main/backend/src/cognitive_os_agent.c)、[Scheduler](https://github.com/LeonQin-ai/light-agent/blob/main/backend/src/runtime/scheduler.c)、[Reasoning](https://github.com/LeonQin-ai/light-agent/blob/main/backend/src/cognition/reasoning.c)。
 
 ## 延伸阅读与实践顺序
 

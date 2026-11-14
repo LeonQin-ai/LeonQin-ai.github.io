@@ -2,7 +2,7 @@
 
 > “先阅读源码，再修改，再验证”是一条执行依赖。把它写进提示词有帮助，但真正保证第二步不会提前开始，需要调度系统理解这条依赖。
 
-这是 [Cognitive OS](https://github.com/LeonQin-ai/cognitive-os-agent) 技术系列第 3 篇。上一篇的群聊适合讨论问题；这一篇关注有交付结果的多角色工作流。
+这是 [light-agent](https://github.com/LeonQin-ai/light-agent) 技术系列第 3 篇。上一篇的群聊适合讨论问题；这一篇关注有交付结果的多角色工作流。
 
 ## 这篇文章要解决什么问题？
 
@@ -296,7 +296,7 @@ blocked 的价值是解释因果。如果所有未完成节点都只写 error，
 
 另一组用例故意让上游失败，确认其子孙 blocked，而独立分支正常完成。这些都是可重复的控制流测试，使用本地 fixture，不需要付费模型。
 
-源码：[Flow 编译与执行](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/src/runtime/flow.c)、[接口定义](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/include/runtime/flow.h)。验证：[依赖端到端测试](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/tests/test_flow_dependencies_e2e.py)。
+源码：[Flow 编译与执行](https://github.com/LeonQin-ai/light-agent/blob/main/backend/src/runtime/flow.c)、[接口定义](https://github.com/LeonQin-ai/light-agent/blob/main/backend/include/runtime/flow.h)。验证：[依赖端到端测试](https://github.com/LeonQin-ai/light-agent/blob/main/backend/tests/test_flow_dependencies_e2e.py)。
 
 ### 面试中如何展示 DAG 语义
 
@@ -359,7 +359,7 @@ T_dynamic ≥ max(path_sum(source → sink))
 
 如果进一步采用动态就绪调度，需要先维持节点唯一终态、结果只发布一次、成功前驱计数和失败阻断等不变量，再处理取消与完成之间的竞争。只有这些条件可检查，减少层屏障的性能优化才不会破坏依赖语义。
 
-源码阅读基线：[图编译、Kahn 分层、分批执行与失败传播](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/src/runtime/flow.c)。
+源码阅读基线：[图编译、Kahn 分层、分批执行与失败传播](https://github.com/LeonQin-ai/light-agent/blob/cca98b6/backend/src/runtime/flow.c)。
 
 ## 延伸阅读与实践顺序
 

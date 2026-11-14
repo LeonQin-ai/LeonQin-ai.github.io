@@ -1,8 +1,8 @@
-# Cognitive OS 技术博客系列
+# light-agent 技术博客系列
 
 在线阅读：https://leonqin-ai.github.io/
 
-这组文章面向希望理解、复现或参与 Agent 基础设施的开发者。文章以项目源码、回归用例和已保存的基准报告为依据，可作为中文技术社区文章正文使用。项目地址：[LeonQin-ai/cognitive-os-agent](https://github.com/LeonQin-ai/cognitive-os-agent)。
+这组文章面向希望理解、复现或参与 Agent 基础设施的开发者。文章以项目源码、回归用例和已保存的基准报告为依据，可作为中文技术社区文章正文使用。项目地址：[LeonQin-ai/light-agent](https://github.com/LeonQin-ai/light-agent)。
 
 ## 阅读与发布顺序
 
@@ -15,7 +15,7 @@
 | 5 | [模型说要调用工具，Runtime 如何接住](05-tool-protocol-and-evidence.md) | DSML、分页阅读与多模态附件的工程边界 |
 | 6 | [从回答完成到任务完成](06-reliability-and-recovery.md) | 状态判定、执行证据与进程崩溃恢复 |
 | 7 | [我测了百万任务，但没有测百万次模型推理](07-million-task-benchmark.md) | 真实数据、复现方法和性能口径 |
-| 8 | [用实验读懂 Cognitive OS：运行、验证与故障分析](08-getting-started-and-contributing.md) | 验收脚本、DAG 实验、故障分析与贡献 |
+| 8 | [用实验读懂 light-agent：运行、验证与故障分析](08-getting-started-and-contributing.md) | 验收脚本、DAG 实验、故障分析与贡献 |
 
 建议按顺序连载，每篇围绕一个工程问题展开调用链、实现细节、反例和验证方法。第 1 篇深入队列、协程与所有权，第 2、3 篇分析协作时序和依赖不变量，第 4–6 篇覆盖缓存预算、协议故障和恢复边界，第 7 篇提供原始数据复算，第 8 篇给出验收脚本、实验评价表与故障分析。源码解读以提交 `cca98b6` 为核对基线。
 
@@ -25,22 +25,22 @@
 
 ## 可直接使用的系列简介
 
-> 我正在开发 Cognitive OS：一个用 C11 实现的 Agent Runtime。它把调度、状态、记忆、上下文和工具执行放在 Runtime 中，让模型负责提出方案。这组文章会从源码和实测出发，记录多 Agent 讨论、依赖调度、上下文管理与故障恢复的实现，也公开这些能力目前的边界。
+> 我正在开发 light-agent：一个用 C11 实现的 Agent Runtime。它把调度、状态、记忆、上下文和工具执行放在 Runtime 中，让模型负责提出方案。这组文章会从源码和实测出发，记录多 Agent 讨论、依赖调度、上下文管理与故障恢复的实现，也公开这些能力目前的边界。
 
 ## 配套素材
 
-- [项目中文介绍](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/README.zh-CN.md)、[运行与 API 文档](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/README.md)。
-- [架构白皮书](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/docs/runtime-whitepaper.md)。
-- [5 分钟真实控制台操作录像](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/docs/runtime-demo.mp4)与[录像验证数据](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/docs/runtime-demo-evidence.json)。录像中的模型为本地确定性 fixture，工具和 Runtime 实际执行；群聊片段展示录制时的双角色回复，并非本次新增三轮讨论的录像。
-- [规模与恢复实测报告](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/docs/runtime-benchmark-expanded.md)，保留机器、编译参数、统计方法和原始 JSON 链接。
+- [项目中文介绍](https://github.com/LeonQin-ai/light-agent/blob/main/README.zh-CN.md)、[运行与 API 文档](https://github.com/LeonQin-ai/light-agent/blob/main/backend/README.md)。
+- [架构白皮书](https://github.com/LeonQin-ai/light-agent/blob/main/backend/docs/runtime-whitepaper.md)。
+- [5 分钟真实控制台操作录像](https://github.com/LeonQin-ai/light-agent/blob/main/backend/docs/runtime-demo.mp4)与[录像验证数据](https://github.com/LeonQin-ai/light-agent/blob/main/backend/docs/runtime-demo-evidence.json)。录像中的模型为本地确定性 fixture，工具和 Runtime 实际执行；群聊片段展示录制时的双角色回复，并非本次新增三轮讨论的录像。
+- [规模与恢复实测报告](https://github.com/LeonQin-ai/light-agent/blob/main/backend/docs/runtime-benchmark-expanded.md)，保留机器、编译参数、统计方法和原始 JSON 链接。
 
 ## 可复制的项目分享文案
 
-**系列开篇：** 我用 C11 做了一个 Agent Runtime：模型提出方案，系统负责调度、状态、记忆与工具执行。接下来用 8 篇文章公开它的实现，包括角色群聊如何互相讨论、DAG 怎样避免步骤抢跑、Context 如何在预算内加载，以及百万任务到底测了什么。源码、测试和数据一起开放：[Cognitive OS](https://github.com/LeonQin-ai/cognitive-os-agent)。
+**系列开篇：** 我用 C11 做了一个 Agent Runtime：模型提出方案，系统负责调度、状态、记忆与工具执行。接下来用 8 篇文章公开它的实现，包括角色群聊如何互相讨论、DAG 怎样避免步骤抢跑、Context 如何在预算内加载，以及百万任务到底测了什么。源码、测试和数据一起开放：[light-agent](https://github.com/LeonQin-ai/light-agent)。
 
-**讨论功能介绍：** 最近给 Cognitive OS 加入了有界多轮角色讨论：架构师提方案，评审追问，架构师在下一轮回答。默认 3 轮，可设置 1–5 轮；可以停止，新消息也会接管旧讨论。实现中特别处理了取消后的迟到回复和部分角色失败，配套真实 HTTP 回归。欢迎带一个具体方案来试，也欢迎看源码挑边界问题。
+**讨论功能介绍：** 最近给 light-agent 加入了有界多轮角色讨论：架构师提方案，评审追问，架构师在下一轮回答。默认 3 轮，可设置 1–5 轮；可以停止，新消息也会接管旧讨论。实现中特别处理了取消后的迟到回复和部分角色失败，配套真实 HTTP 回归。欢迎带一个具体方案来试，也欢迎看源码挑边界问题。
 
-**性能篇导读：** 我对 Cognitive OS 做了百万任务 Runtime 实测，但没有把它写成百万次模型推理。文章公开 8 Worker、本地确定性负载、3 轮数据、P99 和内存口径，也说明 1000 角色长运行时出现的吞吐下降与排队突增。希望用可复现数据讨论 Agent 基础设施，而不是只放一个漂亮的峰值。
+**性能篇导读：** 我对 light-agent 做了百万任务 Runtime 实测，但没有把它写成百万次模型推理。文章公开 8 Worker、本地确定性负载、3 轮数据、P99 和内存口径，也说明 1000 角色长运行时出现的吞吐下降与排队突增。希望用可复现数据讨论 Agent 基础设施，而不是只放一个漂亮的峰值。
 
 ## 内容口径
 

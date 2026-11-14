@@ -1,9 +1,9 @@
 # Leon Qin · 工程笔记
 
-个人技术博客，关注 AI 与系统工程，首个专题为 **Cognitive OS 的源码、架构与实测**。
+个人技术博客，关注 AI 与系统工程，首个专题为 **light-agent 的源码、架构与实测**。项目原名 Cognitive OS，文章中的历史版本、命令与实测口径仍以各篇标注为准。
 
 - 网站：**https://leonqin-ai.github.io/**
-- 项目：[Cognitive OS](https://github.com/LeonQin-ai/cognitive-os-agent)
+- 项目：[light-agent](https://github.com/LeonQin-ai/light-agent)
 - [文章目录与项目分享文案](content/README.md)
 - 本仓库只管理博客内容与网站，不包含 Runtime 源码或运行配置。
 

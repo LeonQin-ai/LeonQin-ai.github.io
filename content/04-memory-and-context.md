@@ -1,8 +1,8 @@
-# 记忆与上下文分开管理：Cognitive OS 的 Memory Service 与 Context MMU
+# 记忆与上下文分开管理：light-agent 的 Memory Service 与 Context MMU
 
 > 一段信息值得长期保留，并不代表每次请求都应把它加载进模型窗口。做 Agent 时，我发现“存什么”和“当前读什么”需要两套相互配合的机制。
 
-这是 [Cognitive OS](https://github.com/LeonQin-ai/cognitive-os-agent) 技术系列第 4 篇。本文关注任务之外仍然存在的知识，以及一次推理实际使用的工作集。
+这是 [light-agent](https://github.com/LeonQin-ai/light-agent) 技术系列第 4 篇。本文关注任务之外仍然存在的知识，以及一次推理实际使用的工作集。
 
 ## 这篇文章要解决什么问题？
 
@@ -389,7 +389,7 @@ python tests/test_runtime_benchmark.py
 
 其中的小规模测试会执行真实 MMU 的 HOT 分配、驱逐、概览加载、重新物化和磁盘校验。CI 使用较小的数据检查正确性；历史大内存数据与运行条件保存在基准报告中。
 
-源码：[Memory Service](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/include/memory/service.h)、[Context MMU](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/src/context/mmu.c)、[记录存储](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/src/memory/record.c)。数据：[扩展基准报告](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/docs/runtime-benchmark-expanded.md)。
+源码：[Memory Service](https://github.com/LeonQin-ai/light-agent/blob/main/backend/include/memory/service.h)、[Context MMU](https://github.com/LeonQin-ai/light-agent/blob/main/backend/src/context/mmu.c)、[记录存储](https://github.com/LeonQin-ai/light-agent/blob/main/backend/src/memory/record.c)。数据：[扩展基准报告](https://github.com/LeonQin-ai/light-agent/blob/main/backend/docs/runtime-benchmark-expanded.md)。
 
 ## 6. 怎样结合质量与成本持续调优？
 
@@ -428,7 +428,7 @@ Context 的估算预算也不等于最终请求 token 数。系统提示、工�
 
 调优时应同时查看候选命中、提升与拒绝数量、物化字节、驱逐和重新物化延迟，并检查任务是否实际使用了正确证据。缓存命中率高，也可能只是反复命中无用内容。
 
-源码阅读基线：[MMU 召回、评分、物化与驱逐](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/src/context/mmu.c)、[Service 契约](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/include/memory/service.h)、[Service 默认后端](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/src/memory/service.c)。
+源码阅读基线：[MMU 召回、评分、物化与驱逐](https://github.com/LeonQin-ai/light-agent/blob/cca98b6/backend/src/context/mmu.c)、[Service 契约](https://github.com/LeonQin-ai/light-agent/blob/cca98b6/backend/include/memory/service.h)、[Service 默认后端](https://github.com/LeonQin-ai/light-agent/blob/cca98b6/backend/src/memory/service.c)。
 
 ## 延伸阅读与实践顺序
 

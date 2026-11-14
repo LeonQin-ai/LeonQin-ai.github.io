@@ -1,8 +1,8 @@
-# 我测了百万任务，但没有测百万次模型推理：Cognitive OS 的 Runtime 实测
+# 我测了百万任务，但没有测百万次模型推理：light-agent 的 Runtime 实测
 
 > “百万任务”只有与工作负载一起解释才有意义。这次我测的是实际 Scheduler、AgentPool 和本地确定性任务的执行路径，目的是观察 Runtime 的规模行为，而不是宣称远程模型具有同样的吞吐。
 
-这是 [Cognitive OS](https://github.com/LeonQin-ai/cognitive-os-agent) 技术系列第 7 篇。数据来自仓库保存的扩展基准，以下按原报告口径解读。
+这是 [light-agent](https://github.com/LeonQin-ai/light-agent) 技术系列第 7 篇。数据来自仓库保存的扩展基准，以下按原报告口径解读。
 
 ## 这篇文章要解决什么问题？
 
@@ -387,7 +387,7 @@ million task test 会逐项创建任务对象，但 Scheduler 的完成历史配
 
 复测必须记录代码提交、编译器与参数、机器和系统、工作负载、重复次数、采样方法及聚合规则。先确认这些条件，数字才具备比较基础；累计百万任务也不能直接换算成百万并发用户。
 
-源码阅读基线：[runner 与测量字段](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/tests/bench_runtime.c)、[测量组合与断言](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/tests/run_runtime_measurements.py)。
+源码阅读基线：[runner 与测量字段](https://github.com/LeonQin-ai/light-agent/blob/cca98b6/backend/tests/bench_runtime.c)、[测量组合与断言](https://github.com/LeonQin-ai/light-agent/blob/cca98b6/backend/tests/run_runtime_measurements.py)。
 
 ### 怎样设计下一组可归因的实验
 
@@ -469,7 +469,7 @@ Provider 端到端实验可以随后补充，但要单独控制模型与 token �
 
 这是一组系统工程证据。对于实际业务 Agent，还要继续测模型延迟、限流、工具 I/O、外部失败和具体任务完成率。
 
-数据：[完整报告](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/docs/runtime-benchmark-expanded.md)、[百万任务原始 JSON](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/docs/runtime-million-2026-10-14.json)。源码：[基准程序](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/tests/bench_runtime.c)。
+数据：[完整报告](https://github.com/LeonQin-ai/light-agent/blob/main/backend/docs/runtime-benchmark-expanded.md)、[百万任务原始 JSON](https://github.com/LeonQin-ai/light-agent/blob/main/backend/docs/runtime-million-2026-10-14.json)。源码：[基准程序](https://github.com/LeonQin-ai/light-agent/blob/main/backend/tests/bench_runtime.c)。
 
 ## 延伸阅读与实践顺序
 

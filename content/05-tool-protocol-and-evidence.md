@@ -2,7 +2,7 @@
 
 > 一次工具调用失效，有时不是工具坏了，而是模型计划没有被正确解析；一次源码总结不完整，也可能是系统把“读了第一页”误当成“读完”。可靠执行需要把输入格式和完成证据都处理清楚。
 
-这是 [Cognitive OS](https://github.com/LeonQin-ai/cognitive-os-agent) 技术系列第 5 篇，选三个实际工程问题说明模型输出如何进入执行链路。
+这是 [light-agent](https://github.com/LeonQin-ai/light-agent) 技术系列第 5 篇，选三个实际工程问题说明模型输出如何进入执行链路。
 
 ## 这篇文章要解决什么问题？
 
@@ -382,7 +382,7 @@ Runtime 可以为用户请求提取显式验收项，在末尾逐项检查是否
 
 本地慢速 Provider 能控制响应延迟、错误和格式，稳定复现超时边界。真实远程接口的偶发响应适合兼容性观察，却难以作为每次都可重复的控制流测试。
 
-源码阅读基线：[协议解析](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/src/cognition/planner.c)、[字节分页与 UTF-8 边界](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/src/action/tool_file.c)、[本次真实回复回归](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/tests/test_all.c)。
+源码阅读基线：[协议解析](https://github.com/LeonQin-ai/light-agent/blob/cca98b6/backend/src/cognition/planner.c)、[字节分页与 UTF-8 边界](https://github.com/LeonQin-ai/light-agent/blob/cca98b6/backend/src/action/tool_file.c)、[本次真实回复回归](https://github.com/LeonQin-ai/light-agent/blob/cca98b6/backend/tests/test_all.c)。
 
 ### 怎样观察真实执行
 
@@ -399,7 +399,7 @@ python tests/test_vision_wait_e2e.py
 
 这些用例使用本地模型 fixture 和真实 Runtime/API，验证协议与控制流；它们没有测量生产模型对所有文件的理解准确率。
 
-源码：[Planner](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/src/cognition/planner.c)、[附件入口](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/src/api/attachment.c)、[Reasoning](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/src/cognition/reasoning.c)。
+源码：[Planner](https://github.com/LeonQin-ai/light-agent/blob/main/backend/src/cognition/planner.c)、[附件入口](https://github.com/LeonQin-ai/light-agent/blob/main/backend/src/api/attachment.c)、[Reasoning](https://github.com/LeonQin-ai/light-agent/blob/main/backend/src/cognition/reasoning.c)。
 
 ## 延伸阅读与实践顺序
 

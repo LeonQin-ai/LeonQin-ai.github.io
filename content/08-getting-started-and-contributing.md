@@ -1,8 +1,8 @@
-# 用实验读懂 Cognitive OS：运行、验证与故障分析
+# 用实验读懂 light-agent：运行、验证与故障分析
 
 > 介绍一个 Agent 项目，最有说服力的方式是给读者一条能跑、能观察、能核对的路径。这篇用三个小实验，把前面讨论的 Runtime 能力串起来。
 
-这是 [Cognitive OS](https://github.com/LeonQin-ai/cognitive-os-agent) 技术系列第 8 篇，也是整组文章的实践入口。
+这是 [light-agent](https://github.com/LeonQin-ai/light-agent) 技术系列第 8 篇，也是整组文章的实践入口。
 
 ## 这篇文章要解决什么问题？
 
@@ -489,7 +489,7 @@ Mermaid 图要有足够的文字替代说明。屏幕阅读器可能无法解释
 
 提交说明应记录定位依据、修复效果与验证边界，使后续维护者能够复现问题并理解改动。
 
-源码阅读基线：[HTTP 字段与任务入口](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/src/api/api_rest.c)、[依赖端到端用例](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/tests/test_flow_dependencies_e2e.py)、[CLI 配置和启动](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/cli/main.c)。
+源码阅读基线：[HTTP 字段与任务入口](https://github.com/LeonQin-ai/light-agent/blob/cca98b6/backend/src/api/api_rest.c)、[依赖端到端用例](https://github.com/LeonQin-ai/light-agent/blob/cca98b6/backend/tests/test_flow_dependencies_e2e.py)、[CLI 配置和启动](https://github.com/LeonQin-ai/light-agent/blob/cca98b6/backend/cli/main.c)。
 
 ### 可以从哪里参与
 
@@ -499,7 +499,7 @@ Mermaid 图要有足够的文字替代说明。屏幕阅读器可能无法解释
 
 项目仍有很多值得探索的地方，例如多轮讨论的质量评估、更细的 Context 选择、外部动作的幂等设计和跨平台性能复测。欢迎先跑一个小实验，再带着观察参与讨论。
 
-项目：[GitHub 仓库](https://github.com/LeonQin-ai/cognitive-os-agent)、[中文 README](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/README.zh-CN.md)、[运行与 API 文档](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/README.md)。演示：[真实操作录像](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/docs/runtime-demo.mp4)。
+项目：[GitHub 仓库](https://github.com/LeonQin-ai/light-agent)、[中文 README](https://github.com/LeonQin-ai/light-agent/blob/main/README.zh-CN.md)、[运行与 API 文档](https://github.com/LeonQin-ai/light-agent/blob/main/backend/README.md)。演示：[真实操作录像](https://github.com/LeonQin-ai/light-agent/blob/main/backend/docs/runtime-demo.mp4)。
 
 ## 6. 怎样维护文章、源码基线与发布？
 
@@ -573,4 +573,4 @@ Commit message 描述内容修改而非“update files”。若八篇文章共�
 完成本文后，建议选取“实验二：验证角色之间的信息传播”中的一个分支，用固定输入记录预期行为、实际结果和差异。先验证一个具体不变量，再扩大任务规模；若结果不同，优先核对源码版本、配置与输入证据。
 
 
-上一篇：[百万任务实测](07-million-task-benchmark.md)；返回[系列目录](README.md)。如果这些工程问题也是你正在解决的，欢迎关注、试用或贡献 Cognitive OS。
+上一篇：[百万任务实测](07-million-task-benchmark.md)；返回[系列目录](README.md)。如果这些工程问题也是你正在解决的，欢迎关注、试用或贡献 light-agent。

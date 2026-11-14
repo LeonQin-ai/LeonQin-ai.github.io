@@ -2,7 +2,7 @@
 
 > 一个 Agent 产品最影响信任的地方，往往不是答得不够流畅，而是状态与事实不一致：工作没做却显示完成，或者答案已经完整却显示失败。
 
-这是 [Cognitive OS](https://github.com/LeonQin-ai/cognitive-os-agent) 技术系列第 6 篇。可靠性没有一个开关，需要在多个边界持续校验。
+这是 [light-agent](https://github.com/LeonQin-ai/light-agent) 技术系列第 6 篇。可靠性没有一个开关，需要在多个边界持续校验。
 
 ## 这篇文章要解决什么问题？
 
@@ -400,7 +400,7 @@ python tests/test_crash_recovery_e2e.py
 
 第一组核对完整说明的一轮完成、混合操作请求的未完成状态，以及历史和重启一致性。后两组核对阅读恢复、真实进程终止和显式重放。它们各自覆盖有限但明确的故障面。
 
-源码：[任务日志](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/src/runtime/tasklog.c)、[事务实现](https://github.com/LeonQin-ai/cognitive-os-agent/tree/main/backend/src/tx)、[完成状态回归](https://github.com/LeonQin-ai/cognitive-os-agent/blob/main/backend/tests/test_information_answers_e2e.py)。
+源码：[任务日志](https://github.com/LeonQin-ai/light-agent/blob/main/backend/src/runtime/tasklog.c)、[事务实现](https://github.com/LeonQin-ai/light-agent/tree/main/backend/src/tx)、[完成状态回归](https://github.com/LeonQin-ai/light-agent/blob/main/backend/tests/test_information_answers_e2e.py)。
 
 ## 6. 如何衡量可靠性并沉淀改进？
 
@@ -422,7 +422,7 @@ python tests/test_crash_recovery_e2e.py
 
 评估时应同时统计误报成功、误报失败、重复副作用、取消完成时间以及恢复后的可用性。仅提高 DONE 的比例，可能掩盖实际未完成的任务。
 
-源码阅读基线：[完成与兜底总结](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/src/cognition/reasoning.c)、[中断识别和 ID 恢复](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/src/runtime/tasklog.c)、[真实进程恢复测试](https://github.com/LeonQin-ai/cognitive-os-agent/blob/cca98b6/backend/tests/test_crash_recovery_e2e.py)。
+源码阅读基线：[完成与兜底总结](https://github.com/LeonQin-ai/light-agent/blob/cca98b6/backend/src/cognition/reasoning.c)、[中断识别和 ID 恢复](https://github.com/LeonQin-ai/light-agent/blob/cca98b6/backend/src/runtime/tasklog.c)、[真实进程恢复测试](https://github.com/LeonQin-ai/light-agent/blob/cca98b6/backend/tests/test_crash_recovery_e2e.py)。
 
 ### 可靠性复盘的实际产物
 
