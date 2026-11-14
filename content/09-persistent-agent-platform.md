@@ -67,3 +67,5 @@
 想从源码开始，可以先看[平台架构](https://github.com/LeonQin-ai/super-agent-bot-plantform/blob/acda0b6/docs/architecture.md)，再看[持久执行](https://github.com/LeonQin-ai/super-agent-bot-plantform/blob/acda0b6/docs/durable-execution.md)与[Linux 验证记录](https://github.com/LeonQin-ai/super-agent-bot-plantform/blob/acda0b6/docs/linux-validation-2026-11-06.md)。如果想理解 Worker 里的模型和工具如何协作，可以接着读[用 C11 写 Agent Runtime](01-agent-runtime-in-c.md)。
 
 如果只看三个入口：[项目源码](https://github.com/LeonQin-ai/super-agent-bot-plantform)看架构，[Linux 验证记录](https://github.com/LeonQin-ai/super-agent-bot-plantform/blob/acda0b6/docs/linux-validation-2026-11-06.md)看真实执行与恢复，[容量复测](https://github.com/LeonQin-ai/super-agent-bot-plantform/blob/acda0b6/docs/agent-capacity-followup-2026-11-07.md)看实例增加后系统如何变化。
+
+上一篇：[三个上手实验](08-getting-started-and-contributing.md)；返回[系列目录](README.md)。欢迎用真实部署中的容量与恢复记录，检验这套持久执行的边界。

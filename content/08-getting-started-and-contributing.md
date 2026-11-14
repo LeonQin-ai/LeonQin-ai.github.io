@@ -573,4 +573,4 @@ Commit message 描述内容修改而非“update files”。若八篇文章共�
 完成本文后，建议选取“实验二：验证角色之间的信息传播”中的一个分支，用固定输入记录预期行为、实际结果和差异。先验证一个具体不变量，再扩大任务规模；若结果不同，优先核对源码版本、配置与输入证据。
 
 
-上一篇：[百万任务实测](07-million-task-benchmark.md)；返回[系列目录](README.md)。如果这些工程问题也是你正在解决的，欢迎关注、试用或贡献 light-agent。
+上一篇：[百万任务实测](07-million-task-benchmark.md)；下一篇：[Agent 平台项目笔记](09-persistent-agent-platform.md)；返回[系列目录](README.md)。如果这些工程问题也是你正在解决的，欢迎关注、试用或贡献 light-agent。
